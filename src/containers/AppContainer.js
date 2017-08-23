@@ -11,7 +11,8 @@ class AppContainer extends Component {
     this.state = {
       users: [],
       isFetching: false,
-      error: null
+      error: null,
+      editMode: false
     };
   }
 
@@ -91,13 +92,13 @@ class AppContainer extends Component {
       method: "DELETE"
     };
     this.setState({ isFetching: true });
-    fetch("https://reqres.in/api/users", options)
+    fetch(`https://reqres.in/api/users${target.value}`, options)
       .then(response => {
         if (!response.ok) {
           throw new Error(`${response.status} ${response.statusText}`);
         }
         const filteredUsers = this.state.users.filter(
-          user => user.first_name + user.last_name !== target.value
+          user => user.id.toString() !== target.value
         );
         this.setState({
           users: filteredUsers,
@@ -128,7 +129,7 @@ class AppContainer extends Component {
 
     this.setState({ isFetching: true });
 
-    fetch("https://reqres.in/api/users/2", options)
+    fetch(`https://reqres.in/api/users/${body.id}`, options)
       .then(response => {
         if (!response.ok) {
           throw new Error(`${response.status} ${response.statusText}`);
@@ -136,18 +137,16 @@ class AppContainer extends Component {
         return response.json();
       })
       .then(json => {
-      console.log("body: ", body);
-        const newArray = this.state.users.filter((user) => {
-          console.log(user);
-          return (user.first_name + user.last_name) !== body.id;
-        })
-
-        newArray.push(json);
-
+        const newUsers = this.state.users.map(user => {
+          if (user.id.toString() === body.id) {
+            user = json;
+          }
+          return user;
+        });
         this.setState(
           {
             isFetching: false,
-            users: newArray
+            users: newUsers
           },
           () => {
             form.reset();
@@ -159,10 +158,14 @@ class AppContainer extends Component {
         console.log(error);
         this.setState({
           isFetching: false,
-          error
+          editMode: false
         });
       });
-    }
+  };
+
+  onEditClick = () => {
+    this.setState({ editMode: true });
+  };
 
   render() {
     return (
@@ -170,10 +173,11 @@ class AppContainer extends Component {
         onAddUser={this.onAddUser}
         onEditUser={this.onEditUser}
         onDeleteUser={this.onDeleteUser}
+        onEditClick={this.onEditClick}
         {...this.state}
       />
     );
   }
-};
+}
 
 export default AppContainer;
