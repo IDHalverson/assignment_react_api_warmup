@@ -1,10 +1,10 @@
 import React from "react";
 import UserCard from "./UserCard";
 
-const UserList = ({ users, isFetching, onDeleteUser }) => {
+const UserList = ({ users, isFetching, onDeleteUser, onEditUser }) => {
   // Generate the UserCard for each user
   const userList = users.map(user =>
-    <UserCard user={user} key={user.id} onDeleteUser={onDeleteUser} />
+    <UserCard user={user} key={user.id} onDeleteUser={onDeleteUser} onEditUser={onEditUser} />
   );
 
   // card-group is the layout wrapper for Bootstrap
