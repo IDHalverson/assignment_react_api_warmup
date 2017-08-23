@@ -1,9 +1,9 @@
-import React from 'react'
-import JumbotronFluid from './elements/JumbotronFluid'
-import UserList from './UserList'
-import UserForm from './UserForm'
+import React from "react";
+import JumbotronFluid from "./elements/JumbotronFluid";
+import UserList from "./UserList";
+import UserForm from "./UserForm";
 
-const App = ({users, isFetching, error, onAddUser}) => (
+const App = ({ users, isFetching, error, onAddUser, onDeleteUser }) =>
   <div className="App">
     <JumbotronFluid
       heading="User CRUD"
@@ -12,13 +12,10 @@ const App = ({users, isFetching, error, onAddUser}) => (
     <UserList
       users={users}
       isFetching={isFetching}
+      onDeleteUser={onDeleteUser}
     />
     <br />
-    <UserForm
-      onSubmit={onAddUser}
-      error={error}
-    />
-  </div>
-)
+    <UserForm onSubmit={onAddUser} error={error} />
+  </div>;
 
-export default App
+export default App;
